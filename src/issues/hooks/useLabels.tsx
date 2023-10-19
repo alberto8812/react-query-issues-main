@@ -15,7 +15,7 @@ const getLabels=async():Promise<Label[]>=>{
         ['label'],//definicmos el espacio en chache
         getLabels,
         {
-          refetchOnWindowFocus:false//evitar que haga peticiones cuando hace un foco en la pagina 
+          staleTime:1000*60*60//la data se va a mantener fresa por una hora 
         }
       );
 
