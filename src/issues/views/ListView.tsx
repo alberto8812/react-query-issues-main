@@ -3,13 +3,15 @@ import { IssueList } from '../components/IssueList';
 import { LabelPicker } from '../components/LabelPicker';
 import { useIssueList } from '../hooks/useIssueList';
 import { LoadingIcon } from '../../shared/components/LoadingIcon';
+import { State } from '../interfaces/issues';
 
 
 export const ListView = () => {
 
   const [selecterLabel, setSelecterLabel] = useState<string[] >([])
+  const [state, setState] = useState<State>()//control de estado para los tickest 
 
-  const {issuesQuery}=useIssueList();
+  const {issuesQuery}=useIssueList({state,labels:selecterLabel});
 
   const onlabelChanged=(labelName:string)=>{
     (selecterLabel.includes(labelName))?
@@ -22,7 +24,7 @@ export const ListView = () => {
       
       <div className="col-8">
         {
-          (issuesQuery.isLoading)?(<LoadingIcon/>):( <IssueList issues={issuesQuery.data || []} />)
+          (issuesQuery.isLoading)?(<LoadingIcon/>):( <IssueList issues={issuesQuery.data || []}  state={state} onSteateChanged={(newState)=>setState(newState)} />)
         }
        
       </div>
