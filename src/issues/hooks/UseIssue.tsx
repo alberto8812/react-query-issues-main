@@ -3,17 +3,27 @@ import React from 'react'
 import { Issues } from '../interfaces/issues';
 import { gitHubApi } from '../../api/gitHubApi';
 
-const getIssueInfo=async(issueNumber:number):Promise<Issues>=>{
+export const getIssueInfo=async(issueNumber:number):Promise<Issues>=>{
    
-   const {data}=await gitHubApi.get<Issues>(`/issues/${issueNumber}`)
+   const {data}=await gitHubApi.get<Issues>(`/issues/${issueNumber}`,{
+    headers:{
+
+      Authorization:null
+    }
+  })
 
    return data
 }
 
 
- const getIssuesCommetns=async(issueNumber:number):Promise<Issues[]>=>{
+ export const getIssuesCommetns=async(issueNumber:number):Promise<Issues[]>=>{
    
-  const {data}=await gitHubApi.get<Issues[]>(`/issues/${issueNumber}/comments`)
+  const {data}=await gitHubApi.get<Issues[]>(`/issues/${issueNumber}/comments`,{
+    headers:{
+
+      Authorization:null
+    }
+  })
  console.log(data)
   return data
 }
@@ -25,7 +35,11 @@ export const UseIssue = (issueNumber:number) => {
     );
     const  CommentsQuery=useQuery(
         ['issue',issueNumber,'comments'],
-        ()=>getIssuesCommetns(issueNumber),
+        ()=>getIssuesCommetns(issueQuery.data!.number),
+        {
+          //si esta en false jamas se va a disparara la query debe pasar a true 
+          enabled:issueQuery.data !==undefined 
+        }
        
     );
   return {
