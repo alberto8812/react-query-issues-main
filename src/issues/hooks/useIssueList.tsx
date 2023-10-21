@@ -5,7 +5,11 @@ import { useQuery } from '@tanstack/react-query'
 
 const getIssues=async():Promise <Issues[]>=>{
         
-    const {data}=await gitHubApi.get<Issues[]>('/issues')
+    const {data}=await gitHubApi.get<Issues[]>('/issues',{
+        headers:{
+            Authorization:null
+        }
+    })
 
     return data
 }
