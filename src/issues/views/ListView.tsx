@@ -10,12 +10,11 @@ export const ListView = () => {
 
   const [selecterLabel, setSelecterLabel] = useState<string[] >([])
   const [state, setState] = useState<State>()//control de estado para los tickest 
-
-  const {issuesQuery}=useIssueList({state,labels:selecterLabel});
+  const {issuesQuery,page,nextPage,PrevPage}=useIssueList({state,labels:selecterLabel});
 
   const onlabelChanged=(labelName:string)=>{
-    (selecterLabel.includes(labelName))?
-    (setSelecterLabel(selecterLabel.filter((data=>labelName!==data))))
+    (selecterLabel.includes(labelName))
+    ?(setSelecterLabel(selecterLabel.filter((data=>labelName!==data))))
     :(setSelecterLabel([...selecterLabel,labelName]))
 
   }
@@ -27,9 +26,9 @@ export const ListView = () => {
           (issuesQuery.isLoading)?(<LoadingIcon/>):( <IssueList issues={issuesQuery.data || []}  state={state} onSteateChanged={(newState)=>setState(newState)} />)
         }
       <div className='d-flex mt-2 justify-content-between align-items-center'>
-        <button className='btn btn-outline-primary'>prev</button>
-        <span>123</span>
-        <button className='btn btn-outline-primary'>Next</button>
+        <button className='btn btn-outline-primary' onClick={PrevPage} >prev</button>
+        <span>{page}</span>
+        <button className='btn btn-outline-primary' onClick={nextPage}>Next</button>
       </div>
       
       </div >
