@@ -4,13 +4,15 @@ import { LabelPicker } from '../components/LabelPicker';
 import { useIssueList } from '../hooks/useIssueList';
 import { LoadingIcon } from '../../shared/components/LoadingIcon';
 import { State } from '../interfaces/issues';
+import { useIssuesInfinite } from '../hooks/useIssuesInfinite';
 
 
-export const ListView = () => {
+
+export const ListViewInfiniteScroll = () => {
 
   const [selecterLabel, setSelecterLabel] = useState<string[] >([])
   const [state, setState] = useState<State>()//control de estado para los tickest 
-  const {issuesQuery,page,nextPage,PrevPage}=useIssueList({state,labels:selecterLabel});
+  const {issuesQuery}=useIssuesInfinite({state,labels:selecterLabel});
 
   const onlabelChanged=(labelName:string)=>{
     (selecterLabel.includes(labelName))
@@ -23,23 +25,15 @@ export const ListView = () => {
       
       <div className="col-8">
         {
-          (issuesQuery.isLoading)?(<LoadingIcon/>):( <IssueList issues={issuesQuery.data || []}  state={state} onSteateChanged={(newState)=>setState(newState)} />)
+          (issuesQuery.isLoading)?(<LoadingIcon/>):( <IssueList issues={issuesQuery.data?.pages.flat() || []}  state={state} onSteateChanged={(newState)=>setState(newState)} />)
         }
-      <div className='d-flex mt-2 justify-content-between align-items-center'>
+
         <button 
-        className='btn btn-outline-primary' 
-        onClick={PrevPage}
-        disabled={issuesQuery.isFetching}//si esta cargando la informacion es el is fetching
-        >prev
+            className='btn btn-outline-primary' 
+            onClick={()=>issuesQuery.fetchNextPage}
+            disabled={!issuesQuery.hasNextPage}//si no tiene una siguiente pagina
+            >Next
         </button>
-        <span>{issuesQuery.isFetching?'Loading...':page}</span>
-        <button 
-        className='btn btn-outline-primary' 
-        onClick={nextPage}
-        disabled={issuesQuery.isFetching}//si esta cargando la informacion es el is fetching
-        >Next
-        </button>
-      </div>
       
       </div >
 
