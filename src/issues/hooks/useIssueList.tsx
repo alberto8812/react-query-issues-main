@@ -1,7 +1,7 @@
 import { Issues, State } from '../interfaces/issues'
 import { gitHubApi } from '../../api/gitHubApi'
 import { useQuery } from '@tanstack/react-query'
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 
 
@@ -43,6 +43,11 @@ interface props{
 export const useIssueList= ({state,labels}:props) => {
   
     const [page, setPage] = useState(1);
+
+    useEffect(() => {
+        setPage(1)
+    }, [labels || state])
+    
   
     const issuesQuery=useQuery(
         ['issues',{labels,state,page}],//nombre para identificar en cahce se hace por que el orden no es importante
